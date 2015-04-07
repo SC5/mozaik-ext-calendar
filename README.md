@@ -2,8 +2,6 @@
 
 Google Calendar widgets for Mozaïk dashboard.
 
-![preview-page-views](https://raw.githubusercontent.com/SC5/mozaik-ext-calendar/master/previews/page_views.png)
-
 **Table of contents**
 <!-- MarkdownTOC depth=0 autolink=true bracket=round -->
 
@@ -84,19 +82,24 @@ Show next upcoming or ongoing event from calendar(s).
 If multiple calendars are defined, the event closest to current
 moment is shown.
 
-![preview-page-views](https://raw.githubusercontent.com/SC5/mozaik-ext-calendar/master/previews/next_event.png)
-
 ### parameters
 
 key           | required | description
 --------------|----------|---------------
-`calendars`   | yes      | *Calendar ids to read. Example: `['user.name@gmail.com', 'another.user@gmail.com']`*
+`calendars`   | yes      | *A list of calendar ids to read. Each entry must have id and title. Example: `[{ id: 'user.name@gmail.com', title: 'User' }, { id: 'another.user@gmail.com', title: 'Another' }]`*
 `ordinal`     | no       | *The ordinal of the calendar event. 0 (default) shows the next/current, 1 shows the next after current etc. Handy with meeting room reseravation calendars*
 
 ### usage
 
 ```javascript
-// config.js
+// dashboard config.js
+
+// Calendars variable for widget configuration
+var calendars = [
+  { title: 'Meeting room 1', id: 'company.com_123@group.calendar.google.com' },
+  { title: 'Meeting room 2', id: 'company.com_321@group.calendar.google.com' }
+];
+
 module.exports = {
   // Configure api
   api: {
@@ -115,14 +118,14 @@ module.exports = {
     widgets: [
       {
         type: 'calendar.next_event',
-        calendars: ['calendarId1', 'calendarId2'],
+        calendars: calendars,
         ordinal: 0, // closest event to current moment
         columns: 1, rows: 1,
         x: 0, y: 0
       },
       {
         type: 'calendar.next_event',
-        calendars: ['calendarId1', 'calendarId2'],
+        calendars: calendars,
         ordinal: 1, // event after closest one
         columns: 1, rows: 1,
         x: 1, y: 0
@@ -135,6 +138,7 @@ module.exports = {
 
 ## Changelog
 
+- 0.1.1: Fixed the documentation
 - 0.1.0: Initial release
 
 ## License
