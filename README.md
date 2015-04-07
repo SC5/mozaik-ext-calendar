@@ -2,6 +2,8 @@
 
 Google Calendar widgets for Mozaïk dashboard.
 
+![preview-page-views](https://raw.githubusercontent.com/SC5/mozaik-ext-calendar/master/previews/next_event.png)
+
 **Table of contents**
 <!-- MarkdownTOC depth=0 autolink=true bracket=round -->
 
@@ -82,6 +84,8 @@ Show next upcoming or ongoing event from calendar(s).
 If multiple calendars are defined, the event closest to current
 moment is shown.
 
+![preview-page-views](https://raw.githubusercontent.com/SC5/mozaik-ext-calendar/master/previews/next_event.png)
+
 ### parameters
 
 key           | required | description
@@ -138,6 +142,7 @@ module.exports = {
 
 ## Changelog
 
+- 0.1.2: Added previews in documentation
 - 0.1.1: Fixed the documentation
 - 0.1.0: Initial release
 
