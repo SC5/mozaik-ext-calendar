@@ -142,6 +142,7 @@ module.exports = {
 
 ## Changelog
 
+- 0.1.3: Added missing almanac.js file in repo
 - 0.1.2: Added previews in documentation
 - 0.1.1: Fixed the documentation
 - 0.1.0: Initial release
