@@ -1,13 +1,15 @@
-var _ = require('lodash');
-var format = require('string-format');
-var moment = require('moment');
-var cryptojs = require('crypto-js');
-var React = require('react');
-var Reflux = require('reflux');
-var ApiConsumerMixin = require('mozaik/browser').Mixin.ApiConsumer;
+import _ from 'lodash';
+import moment from 'moment';
+import cryptojs from 'crypto-js';
+import React, { Component } from 'react';
+import reactMixin from 'react-mixin';
+import { ListenerMixin } from 'reflux';
+import Mozaik from 'mozaik/browser';
+import classNames from 'classnames';
+import moment from 'moment';
 
 
-var formatEventTimerange = function(event) {
+function formatEventTimerange(event) {
   var start, end, now, diff;
   start = moment(event.start);
   end = moment(event.end);
@@ -20,27 +22,16 @@ var formatEventTimerange = function(event) {
   }
 };
 
-var NextEvent = React.createClass({
-  mixins: [
-    Reflux.ListenerMixin,
-    ApiConsumerMixin
-  ],
-
-  getInitialState() {
-    return {};
-  },
-
-  propTypes: {
-    calendars: React.PropTypes.array.isRequired,
-    ordinal: React.PropTypes.number
-  },
+class NextEvent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
   getApiRequest() {
-    // NOTE: MD5 is unique enough for our purposes
-    var calendarIds = _.map(this.props.calendars, function(calendar) {
-      return calendar.id
-    });
-    var id = format('calendar.events.{}', cryptojs.MD5(calendarIds.join('-')));
+    // NOTE: Generating unique id from calendar names
+    var calendarIds = this.props.calendars.map((calendar) => calendar.id);
+    var id = `calendar.events.${cryptojs.MD5(calendarIds.join('-'))}`;
 
     return {
       id: id,
@@ -101,4 +92,17 @@ var NextEvent = React.createClass({
   }
 });
 
-module.exports = NextEvent;
+NextEvent.propTypes = {
+  calendars: React.PropTypes.array.isRequired,
+  ordinal: React.PropTypes.number
+};
+
+NextEvent.defaultProps = {
+  title: ''
+};
+
+// apply the mixins on the component
+reactMixin(NextEvent.prototype, ListenerMixin);
+reactMixin(NextEvent.prototype, Mozaik.Mixin.ApiConsumer);
+
+export default NextEvent;
