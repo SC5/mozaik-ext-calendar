@@ -1,10 +1,11 @@
-var fs = require('fs');
-var path = require('path');
-var Promise = require('bluebird');
-var config = require('./config');
-var Almanac = require('./lib/almanac');
+import fs from 'fs';
+import path from 'path';
+import Promise from 'bluebird';
+import config from './config';
+import Almanac from './almanac';
 
- module.exports = function (mozaik) {
+const client = mozaik => {
+
   mozaik.loadApiConfig(config);
   var keyPath = path.normalize(config.get('calendar.googleServiceKeypath'));
 
@@ -23,21 +24,25 @@ var Almanac = require('./lib/almanac');
     serviceKey: fs.readFileSync(keyPath).toString()
   });
 
-  return {
-    events: function(params) {
+  const apiCalls = {
+    events: (params) => {
 
       return almanac.authorize()
-      .then(function() {
+      .then(() => {
         return almanac.readMultipleCalendars({ calendars: params.calendars });
       })
-      .then(function(events) {
+      .then((events) => {
         return Promise.resolve(events);
       })
-      .catch(function(err) {
-        console.warn('Failed to read calendar events', err.toString())
+      .catch((err) => {
+        console.warn('Failed to read calendar events', err.toString());
         return Promise.resolve([]);
       });
 
     }
-  }
+  };
+
+  return apiCalls;
 };
+
+export default client;

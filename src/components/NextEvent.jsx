@@ -1,46 +1,35 @@
-var _ = require('lodash');
-var format = require('string-format');
-var moment = require('moment');
-var cryptojs = require('crypto-js');
-var React = require('react');
-var Reflux = require('reflux');
-var ApiConsumerMixin = require('mozaik/browser').Mixin.ApiConsumer;
+import _ from 'lodash';
+import moment from 'moment';
+import cryptojs from 'crypto-js';
+import React, { Component } from 'react';
+import reactMixin from 'react-mixin';
+import { ListenerMixin } from 'reflux';
+import Mozaik from 'mozaik/browser';
 
 
-var formatEventTimerange = function(event) {
+function formatEventTimerange(event) {
   var start, end, now, diff;
   start = moment(event.start);
   end = moment(event.end);
   now = moment();
   diff = start.diff(now);
   if (diff < 0) {
-    return "Ends " + end.fromNow();
+    return `Ends ${end.fromNow()}`;
   } else {
-    return start.calendar() + " to " + end.format("HH:mm");
+    return `${start.calendar()} to ${end.format('HH:mm')}`;
   }
 };
 
-var NextEvent = React.createClass({
-  mixins: [
-    Reflux.ListenerMixin,
-    ApiConsumerMixin
-  ],
-
-  getInitialState() {
-    return {};
-  },
-
-  propTypes: {
-    calendars: React.PropTypes.array.isRequired,
-    ordinal: React.PropTypes.number
-  },
+class NextEvent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
   getApiRequest() {
-    // NOTE: MD5 is unique enough for our purposes
-    var calendarIds = _.map(this.props.calendars, function(calendar) {
-      return calendar.id
-    });
-    var id = format('calendar.events.{}', cryptojs.MD5(calendarIds.join('-')));
+    // NOTE: Generating unique id from calendar names
+    const calendarIds = this.props.calendars.map((calendar) => calendar.id);
+    const id = `calendar.events.${cryptojs.MD5(calendarIds.join('-'))}`;
 
     return {
       id: id,
@@ -48,7 +37,7 @@ var NextEvent = React.createClass({
         calendars: this.props.calendars
       }
     };
-  },
+  }
 
   onApiData(events) {
     if (!events || events.length === 0) {
@@ -60,7 +49,7 @@ var NextEvent = React.createClass({
       this.props.ordinal = 0;
     }
 
-    var now = moment();
+    const now = moment();
 
     this.setState({
       // NOTE: It's fine to have undefined if out of index
@@ -68,14 +57,15 @@ var NextEvent = React.createClass({
       updated: now,
       ordinal: this.props.ordinal
     });
-  },
+  }
 
   render() {
-    var title = '';
-    var timerange = '';
-    var calendar = {};
-    var desc = '';
+    let title = '';
+    let timerange = '';
+    let calendar = {};
+    let desc = '';
 
+    // Collect values from event
     if (this.state.event) {
       calendar = this.state.event.calendar;
       title = this.state.event.title;
@@ -83,7 +73,7 @@ var NextEvent = React.createClass({
       timerange = formatEventTimerange(this.state.event);
     }
 
-    var widget = (
+    const widget = (
       <div>
         <div className="widget__header">
           {calendar.title}
@@ -99,6 +89,20 @@ var NextEvent = React.createClass({
 
     return widget;
   }
-});
 
-module.exports = NextEvent;
+}
+
+NextEvent.propTypes = {
+  calendars: React.PropTypes.array.isRequired,
+  ordinal: React.PropTypes.number
+};
+
+NextEvent.defaultProps = {
+  title: 'Calendar'
+};
+
+// apply the mixins on the component
+reactMixin(NextEvent.prototype, ListenerMixin);
+reactMixin(NextEvent.prototype, Mozaik.Mixin.ApiConsumer);
+
+export default NextEvent;

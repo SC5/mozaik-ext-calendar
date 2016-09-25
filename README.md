@@ -31,19 +31,21 @@ Follow the steps to install and configure widget into dashboard
 - Register client api by adding to dashboard `app.js`:
 
   ```javascript
-  mozaik.bus.registerApi('calendar', require('mozaik-ext-calendar/client'));
+  import calendar from 'mozaik-ext-calendar/client';
+  mozaik.bus.registerApi('calendar', calendar);
   ```
 
 - Register widgets by adding to dashboard ``src/App.jsx``:
 
   ```javascript
-  mozaik.addBatch('calendar', require('mozaik-ext-calendar'));
+  import calendar from 'mozaik-ext-calendar';
+  mozaik.addBatch('calendar', calendar);
   ```
 
 - Build the dashboard:
 
   ```shell
-  gulp publish
+  npm run build-assets
   ```
 
 - Create Google service account for reading the calendar events
@@ -75,7 +77,7 @@ Follow the steps to install and configure widget into dashboard
 - Run the dashboard:
 
   ```shell
-  node app.js
+  npm start
   ```
 
 ## Widget: calendar.next_event
@@ -142,10 +144,27 @@ module.exports = {
 
 ## Changelog
 
-- 0.1.3: Added missing almanac.js file in repo
-- 0.1.2: Added previews in documentation
-- 0.1.1: Fixed the documentation
-- 0.1.0: Initial release
+### Release 0.2.0
+
+- Updated support against Mozaik 1.4
+- Linted code
+- Moved to ES6
+
+### Release 0.1.3
+
+- Added missing almanac.js file in repo
+
+### Release 0.1.2
+
+- Added previews in documentation
+
+### Release 0.1.1
+
+- Fixed the documentation
+
+### Release 0.1.0
+
+- Initial release
 
 ## License
 

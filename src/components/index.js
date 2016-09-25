@@ -1,3 +1,5 @@
-module.exports = {
-  NextEvent: require('./NextEvent.jsx')
-}
+import NextEvent from './NextEvent.jsx';
+
+export default {
+  NextEvent
+};
