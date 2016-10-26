@@ -1,34 +1,25 @@
-.widget__body.calendar
-  padding 2vmin
-
-  h2
-    font-size 2vmin
-
-.content {
-  padding: 0 40px 20px 40px;
-  background-size: 20%;
-  background-position: 91% 94%;
-  height: 503px;
+.calendar {
+  padding: 2vmin;
 }
 
-.time {
-  font-size: 1.8em;
-  color: #3F80C2;
-  margin: 10px 0;
+.calendar__title {
+  margin-top: 1vh;
 }
 
-.more-info {
-  font-size: 1.6em;
+.calendar__list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
 }
 
-.room {
-  font-size: 1.6em;
+.calendar__list-item {
+
 }
 
-.updated-at {
-  font-size: 1.6em;
+.calendar__list-item--title {
+  padding-right: 2vw;
 }
 
-.updated-at span {
-  color: #3F80C2;
+.calendar__list-item--date {
+  color: lighten($widget-bg-color, 20);
 }

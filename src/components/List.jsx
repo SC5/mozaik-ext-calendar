@@ -16,14 +16,16 @@ function formatEventTimerange(event) {
   if (diff < 0) {
     return `Ends ${end.fromNow()}`;
   } else {
-    return `${start.calendar()} - ${end.format('LT')}`;
+    return `${start.calendar()} to ${end.format('HH:mm')}`;
   }
 };
 
-class NextEvent extends Component {
+class List extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      events: []
+    };
   }
 
   getApiRequest() {
@@ -45,44 +47,37 @@ class NextEvent extends Component {
       return;
     }
 
-    if (this.props.ordinal === undefined) {
-      this.props.ordinal = 0;
-    }
-
     const now = moment();
-
     this.setState({
-      // NOTE: It's fine to have undefined if out of index
-      event: events[this.props.ordinal],
-      updated: now,
-      ordinal: this.props.ordinal
+      events: events,
+      updated: now
     });
   }
 
   render() {
-    let title = '';
-    let timerange = '';
-    let calendar = {};
-    let desc = '';
-
-    // Collect values from event
-    if (this.state.event) {
-      calendar = this.state.event.calendar;
-      title = this.state.event.title;
-      desc = this.state.event.body;
-      timerange = formatEventTimerange(this.state.event);
-    }
+    //console.log('Events', this.state.events);
+    const listItems = _.chain(this.state.events)
+      .sortBy('time')
+      .slice(0, this.props.limit !== 0 ? this.props.limit : this.state.events.length)
+      .map((event, key) => {
+        const time = moment(event.start);
+        return (<li className="calendar__list-item" key={key}>
+          <span className="calendar__list-item--title">{event.title}</span>
+          <span className="calendar__list-item--date">({time.format(this.props.dateFormat)})</span>
+        </li>);
+      })
+      .value();
 
     const widget = (
       <div>
         <div className="widget__header">
-          {calendar.title}
+          {this.props.title}
           <i className="fa fa-calendar" />
         </div>
-        <div className="widget__body calendar calendar__next_event">
-          <h2 className="calendar__title">{title}</h2>
-          <div className="calendar__time-range">{timerange}</div>
-          <p className="calendar__description">{desc}</p>
+        <div className="widget__body calendar calendar__list-wrapper">
+          <ul className="calendar__list">
+            {listItems}
+          </ul>
         </div>
       </div>
     );
@@ -92,17 +87,20 @@ class NextEvent extends Component {
 
 }
 
-NextEvent.propTypes = {
+List.propTypes = {
   calendars: React.PropTypes.array.isRequired,
-  ordinal: React.PropTypes.number
+  dateFormat: React.PropTypes.string,
+  limit: React.PropTypes.integer,
 };
 
-NextEvent.defaultProps = {
-  title: 'Calendar'
+List.defaultProps = {
+  title: 'Calendar',
+  dateFormat: 'LL',
+  limit: 0
 };
 
 // apply the mixins on the component
-reactMixin(NextEvent.prototype, ListenerMixin);
-reactMixin(NextEvent.prototype, Mozaik.Mixin.ApiConsumer);
+reactMixin(List.prototype, ListenerMixin);
+reactMixin(List.prototype, Mozaik.Mixin.ApiConsumer);
 
-export default NextEvent;
+export default List;

@@ -142,7 +142,48 @@ module.exports = {
 ```
 
 
+## Widget: calendar.list
+
+List upcoming events in a list
+
+![preview-page-views](https://raw.githubusercontent.com/SC5/mozaik-ext-calendar/master/previews/list.png)
+
+### parameters
+
+key           | required | description
+--------------|----------|---------------
+`calendars`   | yes      | *A list of calendar ids to read. Each entry must have id and title. Example: `[{ id: 'user.name@gmail.com', title: 'User' }, { id: 'another.user@gmail.com', title: 'Another' }]`*
+`title`       | no       | *Title to show. Defaults to `Calendar`*
+`dateFormat`  | no       | *Show event start time with Moment.js supported format. Default: `LL`*
+`limit`       | no       | *Maximum number of events to show. Defaults to `0` which means no limit*
+
+### usage
+
+```javascript
+  // Widget usage
+  dashboards: [
+    columns: 2,
+    rows: 2,
+    widgets: [
+      {
+        type: 'calendar.list',
+        calendars: calendars,
+        title: 'Upcoming events',
+        dateFormat: 'LLL',
+        limit: 5,
+        columns: 1, rows: 1,
+        x: 0, y: 0
+      }
+    ]
+  ]
+}
+```
+
 ## Changelog
+
+### Release 0.3.0
+
+- New widget: List
 
 ### Release 0.2.0
 
