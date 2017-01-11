@@ -181,6 +181,10 @@ key           | required | description
 
 ## Changelog
 
+### Release 0.3.1
+
+- Handle calendar reading error gracefully 
+
 ### Release 0.3.0
 
 - New widget: List
