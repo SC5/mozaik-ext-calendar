@@ -64,8 +64,14 @@ class Almanac {
           reject(err);
         }
 
+        if (!response) {
+          console.warn(`Calendar ${opts.calendar.id} cannot be read. Check settings`);
+          return reject(new Error('Failed to read calendar'));
+        }
+
         if (!response.items || response.items.length === 0) {
           console.warn('No items found with calendarId:', opts.calendar.id);
+          console.log('Response', response);
           return resolve([]);
         }
 
